@@ -1,0 +1,105 @@
+---
+- name: Installing Nextcloud on CentOS
+  hosts: tag_Name_lookatme
+  remote_user: centos
+  become: true
+  vars:
+    - db_name: nextcloud
+    - nc_dbuser: user
+    - nc_dbpassword: passd234
+
+  tasks:
+  - name: Install Prerequisites
+    yum:
+      name: '{{ item }}'
+      state: latest
+    with_items:
+      - epel-release
+      - wget
+      - bzip2
+      - httpd
+      - mariadb-server
+      - MySQL-python
+      - php
+      - php-mysql
+      - php-dom
+      - php-gd
+      - php-mbstring
+      - php-posix
+      - php-xmlwriter
+      - php-zip
+
+  - name: extract installer
+    unarchive:
+      src: https://download.nextcloud.com/server/releases/nextcloud-10.0.1.tar.bz2
+      dest: /var/www/html/
+      remote_src: True
+      owner: apache
+      group: apache
+
+  - name: Create datadir
+    file:
+      dest: /var/www/html/nextcloud/data
+      owner: apache
+      group: apache
+      mode: 0755
+      state: directory
+
+  - name: Change Owner to Web Server
+    file:
+      dest: /var/www/html/nextcloud/
+      owner: apache
+      group: apache
+      state: directory
+      recurse: yes
+
+  - name: Start DB Before Creating DBUser
+    service:
+      name: mariadb
+      state: started
+
+  - name: Create Database
+    mysql_db:
+      name: 'nextcloud'
+      state: present
+
+  - name: Create NextCloud database user
+    mysql_user:
+      name: 'user'
+      password: 'passd234'
+      priv: 'nextcloud.*:ALL'
+      host: 'localhost'
+      state: present
+
+  - name: Complete DB and DBUser Creation
+    service:
+      name: mariadb
+      state: restarted
+
+  - name: Nearly Done! Checking Setup...
+    file:
+      dest: /var/www/html/nextcloud/config
+      owner: apache
+      group: apache
+      mode: 0775
+      state: directory
+
+  - name: Final File Processing...
+    selinux:
+      state: disabled
+
+  - name: Restart Web Services
+    service:
+      name: httpd
+      state: restarted
+
+  handlers:
+  - name: restart mariadb
+    service:
+      name: mariadb
+      state: restarted
+
+  - name: restart httpd
+    service:
+      name: httpd
+      state: restarted
