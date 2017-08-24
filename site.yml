@@ -1,15 +1,12 @@
 ---
 - name: Install Stuff
-  hosts: tag_Name_
+  hosts: tag_Name_lookatme
   remote_user: centos
   become: true
-  vars:
-    - db_name: nextcloud
-    - nc_dbuser: user
-    - nc_dbpassword: pass
 
   roles:
     - common
     - nc-httpd
     - nc-php
     - nc-sql
+    - nextcloud

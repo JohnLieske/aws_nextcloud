@@ -17,16 +17,22 @@
 
 - name: Create NextCloud database
   mysql_db:
-    name: {{ db_name }}
+    name: nextcloud
     state: present
 
 - name: Create NextCloud database user
   mysql_user:
-    name: {{ nc_dbuser }}
-    password: {{ nc_dbpassword }}
-    priv: {{ db_name }}.*:ALL
+    name: ncuser
+    password: passd234
+    priv: nextcloud.*:ALL
     host: localhost
     state: present
+
+- name: Drop in PHPinfo for debug
+  template:
+    src: phpinfo.php
+    dest: /var/www/html/nextclouphpinfo.php
+  notify: restart httpd
 
 #- name: Template config file
 #  template:

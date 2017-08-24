@@ -1,4 +1,4 @@
----
+
 - name: install EPEL repo
   yum:
     name: epel-release
@@ -6,7 +6,7 @@
 
 - name: install tools
   yum:
-    name: {{ item }}
+    name: '{{ item }}'
     state: latest
   with_items:
     - unzip
