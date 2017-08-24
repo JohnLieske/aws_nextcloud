@@ -1,0 +1,35 @@
+---
+- name: extract installer
+  unarchive:
+    src: https://download.nextcloud.com/server/releases/latest-12.tar.bz2
+    dest: /var/www/html/
+    remote_src: True
+    owner: apache
+    group: apache
+
+- name: Create Data Directory
+  file:
+    dest: /var/www/html/nextcloud/data
+    owner: apache
+    group: apache
+    mode: 0775
+    state: directory
+
+- name: Create NextCloud database
+  mysql_db:
+    name: {{ db_name }}
+    state: present
+
+- name: Create NextCloud database user
+  mysql_user:
+    name: {{ nc_dbuser }}
+    password: {{ nc_dbpassword }}
+    priv: {{ db_name }}.*:ALL
+    host: localhost
+    state: present
+
+#- name: Template config file
+#  template:
+#    src: config.php
+#    dest: /var/www/html/nextcloud/config/config.php
+#  notify: restart httpd

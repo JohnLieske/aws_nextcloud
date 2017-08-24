@@ -1,0 +1,36 @@
+---
+- name: Add Webtatic repo
+  yum:
+    name: "https://mirror.webtatic.com/yum/el7/webtatic-release.rpm"
+    state: present
+
+- name: Install PHP
+  yum:
+    name: {{ item }}
+    state: present
+  with_items:
+    - php70w
+    - php70w-dom
+    - php70w-mbstring
+    - php70w-gd
+    - php70w-pdo
+    - php70w-json
+    - php70w-xml
+    - php70w-zip
+    - php70w-curl
+    - php70w-mcrypt
+    - php70w-pear
+    - php70w-mysql
+    - php70w-fpm
+
+- name: PHP Installed Starting
+  service:
+    name: php-fpm
+    state: started
+    enabled: yes
+
+- name: Drop in PHPinfo for debug
+  template:
+    src: phpinfo.php
+    dest: /var/www/html/nextcloud/phpinfo.php
+  notify: restart httpd

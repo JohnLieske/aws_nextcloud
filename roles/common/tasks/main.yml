@@ -1,0 +1,19 @@
+---
+- name: install EPEL repo
+  yum:
+    name: epel-release
+    state: present
+
+- name: install tools
+  yum:
+    name: {{ item }}
+    state: latest
+  with_items:
+    - unzip
+    - wget
+    - bzip2
+
+- name: Set SELinux to permissive
+  selinux:
+    policy: targeted
+    state: permissive

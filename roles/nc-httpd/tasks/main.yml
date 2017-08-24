@@ -1,0 +1,11 @@
+---
+- name: Installing Web Server
+  yum:
+    name: httpd
+    state: latest
+
+- name: Web Server Installed Starting
+  service:
+    name: httpd
+    state: started
+    enabled: yes
