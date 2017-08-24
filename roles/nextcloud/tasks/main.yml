@@ -28,12 +28,6 @@
     host: localhost
     state: present
 
-- name: Drop in PHPinfo for debug
-  template:
-    src: phpinfo.php
-    dest: /var/www/html/nextclouphpinfo.php
-  notify: restart httpd
-
 #- name: Template config file
 #  template:
 #    src: config.php

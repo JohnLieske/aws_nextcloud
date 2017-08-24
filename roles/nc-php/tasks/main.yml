@@ -23,6 +23,12 @@
     - php70w-mysql
     - php70w-fpm
 
+- name: Drop in PHPinfo for debug
+  template:
+    src: phpinfo.php
+    dest: /var/www/html/phpinfo.php
+  notify: restart httpd
+
 - name: PHP Installed Starting
   service:
     name: php-fpm
