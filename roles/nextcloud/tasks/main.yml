@@ -23,13 +23,13 @@
 - name: Create NextCloud database user
   mysql_user:
     name: ncuser
-    password: passd234
+    password: pass1234
     priv: nextcloud.*:ALL
     host: localhost
     state: present
 
-#- name: Template config file
-#  template:
-#    src: config.php
-#    dest: /var/www/html/nextcloud/config/config.php
-#  notify: restart httpd
+- name: Start Web Server
+  service:
+    name: httpd
+    state: restarted
+    enabled: yes

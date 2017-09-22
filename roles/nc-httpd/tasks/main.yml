@@ -4,7 +4,7 @@
     name: httpd
     state: latest
 
-- name: Web Server Installed Starting
+- name: Web Server Installed
   service:
     name: httpd
     state: started

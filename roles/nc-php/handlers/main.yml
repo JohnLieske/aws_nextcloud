@@ -1,9 +1,4 @@
 ---
-- name: restart phpfpm
-  service:
-    name: php-fpm
-    state: restarted
-
 - name: restart httpd
   service:
     name: httpd
