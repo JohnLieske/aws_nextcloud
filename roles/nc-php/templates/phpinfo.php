@@ -7,8 +7,8 @@ PHP Info
 
 <?php
 
-// Show all information, defaults to INFO_ALL
-phpinfo();
+// Show config; defaults to INFO_ALL
+phpinfo(INFO_GENERAL);
 
 ?>
 
