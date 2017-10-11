@@ -24,7 +24,7 @@
     - php70w-fpm
 
 - name: Drop in PHPinfo for debug
-  file:
+  copy:
     src: phpinfo.php
     dest: /var/www/html/phpinfo.php
   notify: restart httpd
