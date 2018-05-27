@@ -22,11 +22,16 @@
 
 - name: Create NextCloud database user
   mysql_user:
-    name: ncuser
+    name: ncdbadmin
     password: pass1234
     priv: nextcloud.*:ALL
     host: localhost
     state: present
+
+- name: Change default webroot
+  copy:
+    src: httpd.conf
+    dest: /etc/httpd/conf/httpd.conf
 
 - name: Start Web Server
   service:

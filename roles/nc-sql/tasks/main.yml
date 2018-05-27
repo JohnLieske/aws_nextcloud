@@ -1,7 +1,7 @@
 ---
 - name: Install MariaDB package
   yum:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: latest
   with_items:
     - mariadb-server

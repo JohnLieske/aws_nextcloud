@@ -10,7 +10,7 @@ PHP Info
 // Show config; defaults to INFO_ALL
 phpinfo(INFO_GENERAL);
 
-?>
+ ?>
 
 </body>
 </html>

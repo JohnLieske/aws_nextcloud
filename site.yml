@@ -1,6 +1,6 @@
 ---
 - name: Install Stuff
-  hosts: tag_Name_meseeks
+  hosts: myec2instance
   remote_user: centos
   become: true
 

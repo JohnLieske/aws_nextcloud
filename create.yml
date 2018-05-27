@@ -1,0 +1,71 @@
+---
+- name: Spin up Cent instance
+  hosts: localhost
+  gather_facts: false
+  vars:
+    - region: us-east
+    - project_name: chaoticgood
+    - which_subnet: subnet-IDGOESHERE
+
+  tasks:
+  - name: search for the latest rhel 7 ami
+    ec2_ami_find:
+      owner: 410186602215
+      region: "{{ region }}"
+      name: CentOS Linux 7 x86_64 HVM EBS*
+    register: find_results
+
+  - debug:
+      var: find_results.results[0].ami_id
+
+  - name: Create instance
+    ec2:
+      key_name: KEYNAMEGOESHERE
+      group: servers
+      volumes:
+      - device_name: /dev/sda1
+        volume_type: gp2
+        volume_size: 28
+        delete_on_termination: true
+      vpc_subnet_id: "{{ which_subnet }}"
+      instance_type: t2.micro
+      image: "{{ find_results.results[0].ami_id }}"
+      wait: true
+      region: "{{ region }}"
+      exact_count: 1
+      count_tag:
+        Count: oboy
+      instance_tags:
+        Name: "{{ project_name }}"
+        Count: "{{ project_name }}"
+      assign_public_ip: true
+    register: ec2
+
+  - name: Add instance public IP to host group
+    add_host:
+      hostname: "{{ item.public_ip }}"
+      groups: myec2instance
+      ansible_ssh_private_key_file: ./KEYNAMEGOESHERE.pem
+    when: item.public_ip != None
+    with_items: "{{ ec2.instances }}"
+
+- name: Install Nextcloud
+  hosts: myec2instance
+  gather_facts: false
+  become: true
+  vars:
+    ansible_user: centos
+    ansible_ssh_private_key_file: ./KEYNAMEGOESHERE.pem
+
+  tasks:
+  - name: Prepare to run installer roles
+    wait_for_connection:
+      timeout: 300
+      delay: 5
+
+  roles:
+    - common
+    - nc-httpd
+    - nc-php
+    - nc-sql
+    - nextcloud

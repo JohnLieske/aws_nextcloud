@@ -6,7 +6,7 @@
 
 - name: Install PHP
   yum:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: present
   with_items:
     - php70w
@@ -26,7 +26,7 @@
 - name: Drop in PHPinfo for debug
   copy:
     src: phpinfo.php
-    dest: /var/www/html/phpinfo.php
+    dest: /var/www/html/index.php
   notify: restart httpd
 
 - name: PHP Installed Starting
