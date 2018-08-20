@@ -2,11 +2,6 @@
 - name: Spin up Cent instance
   hosts: localhost
   gather_facts: false
-  vars:
-    - region: us-east
-    - keyz: KEYNAMEGOESHERE
-    - project_name: chaoticgood
-    - which_subnet: subnet-IDGOESHERE
 
   tasks:
   - name: search for the latest rhel 7 ami
